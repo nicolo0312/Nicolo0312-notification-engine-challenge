@@ -1,16 +1,24 @@
 import { parseEvent, DomainEvent } from './events';
 
-// This is the entry point. It receives a raw payload (e.g. from EventBridge),
-// parses and validates it, then passes the typed event to your implementation.
-//
-// How you fill the gap below is your decision.
-// No specific class name, method signature, or pattern is required.
 
 export function handler(rawEvent: unknown): unknown {
-  const event: DomainEvent = parseEvent(rawEvent);
-
-  // TODO: wire your solution here
-  // Given `event`, return a list of notifications.
-  // Each notification should describe who should be notified and what happened.
-  throw new Error('Not implemented');
+  try {
+    const event: DomainEvent = parseEvent(rawEvent);
+  
+    switch(event['detail-type']){
+      case 'MachineMoved':
+        return [];
+      
+      case 'OOSReportBatchCreated':
+        return [];
+  
+      case 'DocumentsExpiring':
+        return [];
+  
+      default:
+        throw new Error('Unhandled event type')
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 }
