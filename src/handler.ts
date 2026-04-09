@@ -17,16 +17,19 @@ export function handler(rawEvent: unknown): unknown {
         }));
       
       case 'OOSReportBatchCreated':
+
+      const projectsIds = new Set(event.detail.reports.map((r) => r.project_id))
         const notifications: any[] = [];
-        for (const report of event.detail.reports) {
+
+        for (const projectId of projectsIds) {
           const pms = userRepo.getUsersByRoleInProject(
-            report.project_id,
+            projectId,
             'project_manager'
           );
           for (const pm of pms){
             notifications.push({
               recipient_id: pm.id,
-              payload: {project: report.project_id}
+              payload: {project: projectId}
             })
           }
         }
