@@ -17,7 +17,20 @@ export function handler(rawEvent: unknown): unknown {
         }));
       
       case 'OOSReportBatchCreated':
-        return [];
+        const notifications: any[] = [];
+        for (const report of event.detail.reports) {
+          const pms = userRepo.getUsersByRoleInProject(
+            report.project_id,
+            'project_manager'
+          );
+          for (const pm of pms){
+            notifications.push({
+              recipient_id: pm.id,
+              payload: {project: report.project_id}
+            })
+          }
+        }
+        return notifications;
   
       case 'DocumentsExpiring':
         return [];
